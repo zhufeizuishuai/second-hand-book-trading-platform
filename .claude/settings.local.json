@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(mvn compile:*)",
+      "Bash(ls /d/code/second-hand-book-trading-platform/mvnw*)"
+    ]
+  }
+}

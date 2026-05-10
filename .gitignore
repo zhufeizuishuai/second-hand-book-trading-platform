@@ -1,0 +1,8 @@
+# 项目排除路径
+/api-client/target/
+/auth-service/target/
+/book-service/target/
+/cart-service/target/
+/gateway-service/target/
+/message-service/target/
+/order-service/target/
