@@ -1,0 +1,84 @@
+server:
+  port: 8085
+  tomcat:
+    threads:
+      max: 25
+    accept-count: 25
+    max-connections: 100
+
+spring:
+  application:
+    name: message-service
+  main:
+    allow-circular-references: true
+
+  cloud:
+    sentinel:
+      transport:
+        dashboard: 192.168.100.128:8858
+        port: 8725
+      eager: true
+    discovery:
+      client:
+        simple:
+          instances:
+            user-service:
+              - uri: http://localhost:8083
+            book-service:
+              - uri: http://localhost:8082
+            cart-service:
+              - uri: http://localhost:8086
+            order-service:
+              - uri: http://localhost:8084
+            message-service:
+              - uri: http://localhost:8085
+    nacos:
+      discovery:
+        # 虚拟机 Nacos 地址
+        server-addr: 192.168.100.128:8848
+        # 注册到 Nacos
+        register-enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/second-hand-book-trading-platform?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: your-mysql-password
+
+  data:
+    redis:
+      host: 192.168.100.128
+      port: 6379
+      password: your-redis-password
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 10
+          min-idle: 1
+          time-between-eviction-runs: 10s
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: org.example.model
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jwt:
+  secret: your-jwt-secret-key-at-least-256-bits
+  expiration: 86400000
+
+feign:
+  sentinel:
+    enabled: true
+
+aliyun:
+  oss:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    bucketName: second-hands
+    accessKeyId: your-aliyun-oss-access-key-id
+    accessKeySecret: your-aliyun-oss-access-key-secret
