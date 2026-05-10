@@ -81,10 +81,4 @@ jwt:
   secret: your-jwt-secret-key-at-least-256-bits
   expiration: 86400000
 
-# ???OSS??
-#aliyun:
-#  oss:
-#    endpoint: oss-cn-beijing.aliyuncs.com
-#    bucketName: second-hands
-#    accessKeyId: LTAI5t63ehyggETJ76ABCnY5
-#    accessKeySecret: WklvJNFcnz5My5hZEj6TZ0d5E7mWoZ
+
