@@ -1,0 +1,91 @@
+server:
+  port: 8080
+  netty:
+    connection-timeout: 30000
+
+spring:
+  application:
+    name: gateway-service
+
+  cloud:
+    # Sentinel 配置
+    sentinel:
+      transport:
+        dashboard: 192.168.100.128:8858  # Sentinel 控制台地址
+        port: 8719                        # 本机与 dashboard 通信端口
+      eager: true                         # 启动即注册到 dashboard
+      log:
+        dir: logs/sentinel
+      # 规则持久化到 Nacos
+      datasource:
+        gateway-flow:
+          nacos:
+            server-addr: 192.168.100.128:8848
+            data-id: ${spring.application.name}-flow-rules
+            group-id: SENTINEL_GROUP
+            data-type: json
+            rule-type: gw-flow
+        gateway-degrade:
+          nacos:
+            server-addr: 192.168.100.128:8848
+            data-id: ${spring.application.name}-degrade-rules
+            group-id: SENTINEL_GROUP
+            data-type: json
+            rule-type: degrade
+
+    # 网关配置
+    gateway:
+      x-forwarded:
+        enabled: false
+
+      # 全局跨域
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true
+
+      # ????
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+
+        - id: book-service
+          uri: lb://book-service
+          predicates:
+            - Path=/api/books/**
+
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/orders/**
+
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/api/cart/**
+
+        - id: message-service
+          uri: lb://message-service
+          predicates:
+            - Path=/api/chat/**
+
+        - id: message-websocket
+          uri: lb:ws://message-service
+          predicates:
+            - Path=/ws/**
+
+    # Nacos 注册发现
+    nacos:
+      discovery:
+        server-addr: 192.168.100.128:8848
+        register-enabled: true
